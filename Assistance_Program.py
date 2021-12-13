@@ -1,4 +1,4 @@
-class Assistance_Program:
+class assistance_program:
     def __init__(self,name = None,eligible_treatments = [], is_open = None, grant_amount = "$0"):
         self.name = name
         self.eligible_treatments = eligible_treatments

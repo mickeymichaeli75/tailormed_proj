@@ -17,44 +17,11 @@ class Assistance_Program:
         ans = ans + ", "
         ans = ans + self.grant_amount
         return ans
-        
-    def get_name(self):
-        return self.name
-        
-    def get_eligible_treatments(self):
-        return self.eligible_treatments
-        
-    def is_prog_open(self):
-        return self.is_open
-        
-    def get_grant_amount(self):
-        return self.grant_amount
-        
-    
-        
-
-    
-
-
-
-
-
-
-# get_all_assistance_programs()
-
-# get_assistance_program()
-
-# update_all_assistance_programs()
-
-# is_open()
 
 
 
 import requests
 from bs4 import BeautifulSoup
-
-
-five_programs = []
 
 def get_values(html_address):
     page = requests.get(html_address)
@@ -141,19 +108,6 @@ def main():
         else:
             print ("You entered a wrong input!")
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 if __name__ == "__main__":
     main()

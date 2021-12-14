@@ -2,24 +2,29 @@ from scraper import get_funds_from_website,update_program,print_updated_funds,pr
 import requests
 from bs4 import BeautifulSoup
 from CONSTS import BASE_HTTP,TABLE_LEN
+import pymongo
 
 def main():
     updated_funds = []
     funds = get_funds_from_website(BASE_HTTP)
     
+    # myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    myclient = pymongo.MongoClient("mongodb+srv://mickeymichaeli75:Omer12Adam@cluster0.wpznx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+    mydb = myclient["ex_database"]
+    mongodb_var = mydb["funds"]
+    
     while True:
         press_button = input(
 """Please press a button:
 1 - update a new program
-2 - show most """ + str(TABLE_LEN) + """ updated programs
-3 - print eligible_treatments of a chosen program\n""")
+2 - show most """ + str(TABLE_LEN) + """ updated programs\n""")
         
         if press_button == "1":     ### choosing a fund from the list in the website.
-            updated_funds = update_program(funds,updated_funds)
+            updated_funds = update_program(funds,mongodb_var)
         elif press_button == "2":   ### printing the most updated funds the user entered.
-            print_updated_funds(updated_funds)
-        elif press_button == "3":   ### print eligible_treatments of a fund.
-            print_eligible_treatments(updated_funds)
+            print_updated_funds(mongodb_var)
+        # elif press_button == "3":   ### print eligible_treatments of a fund.
+            # print_eligible_treatments(mongodb_var)
         else:
             print ("You entered a wrong input!")
     

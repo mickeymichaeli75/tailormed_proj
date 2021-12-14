@@ -49,37 +49,61 @@ def get_values_from_website(html_address):
     for treat in detail.find_all("li"):
         eligible_treatments.append(treat.get_text())
     
-    return eligible_treatments,is_open,is_re_enrollment,grant_amount
+    my_dict = {"eligible_treatments": eligible_treatments, "state": is_open, "is_re_enrollment": is_re_enrollment, "grant_amount": grant_amount}
+    return my_dict
 
-def update_program(funds,updated_funds):
+def update_program(funds,mongodb_var):
     prog = input("Please enter a program to update: ")
     for fund in funds.find_all("li"):
         fund_name = fund.find("a").get_text()
         if fund_name == prog:
             fund_url = fund.find("a")["href"]
-            eligible_treatments,is_open,is_re_enrollment,grant_amount = get_values_from_website(fund_url)
-            new_fund = assistance_program(prog,eligible_treatments,is_open,is_re_enrollment,grant_amount)
-            
-            for i in range(len(updated_funds)):     ### if we update a fund that already in the queue.
-                if new_fund.name == updated_funds[i][0].name:
-                    updated_funds.pop(i)
+            my_dict = get_values_from_website(fund_url)
+            my_dict["name"] = prog
+            my_dict["time"] = time.asctime()
+
+            for dict in mongodb_var.find():     ### if we update a fund that already in the queue.
+                if prog == dict["name"]:
+                    mongodb_var.update_one(dict,{"$set": my_dict})
                     break
-                
-            if len(updated_funds) == TABLE_LEN:     ### If the table is full - pop the queue (first updated first out).
-                updated_funds = [(new_fund, time.asctime())] + updated_funds[:-1]
             else:
-                updated_funds = [(new_fund, time.asctime())] + updated_funds
-            
+                cnt = 0
+                for d in mongodb_var.find():
+                    cnt+=1
+                if cnt == TABLE_LEN:
+                    d_to_remove = mongodb_var.find_one()
+                    mongodb_var.delete_one(d_to_remove)
+                mongodb_var.insert_one(my_dict)
             print ("Successful!\n")       ### succeeded to add a program to the updated funds.
             break
     else:       ### the program isn't found
         print ("The program isn't found!\n")
-    return updated_funds
     
     
-def print_updated_funds(updated_funds):
-    for fund in updated_funds:
-        print (fund[0],",",fund[1])
+    return mongodb_var
+    
+    
+def print_updated_funds(mongodb_var):
+    for dict in mongodb_var.find():
+        key = "name"
+        print (key + ": " + dict[key])
+        key = "state"
+        print (key + ": ",end="")
+        print (dict[key])
+        key = "is_re_enrollment"
+        print (key + ": ",end="")
+        print (dict[key])
+        key = "grant_amount"
+        print (key + ": " + dict[key])
+        key = "time"
+        print (key + ": " + dict[key])
+        key = "eligible_treatments"
+        print (key + ": ",end="")
+        print (dict[key])
+        print ("")
+        
+        
+        
         
 def print_eligible_treatments(updated_funds):
     prog = input("Please enter a fund name: ")

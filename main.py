@@ -8,8 +8,8 @@ def main():
     updated_funds = []
     funds = get_funds_from_website(BASE_HTTP)
     
-    # myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    myclient = pymongo.MongoClient("mongodb+srv://mickeymichaeli75:Omer12Adam@cluster0.wpznx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    
     mydb = myclient["ex_database"]
     mongodb_var = mydb["funds"]
     

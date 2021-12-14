@@ -3,6 +3,14 @@ import requests
 from bs4 import BeautifulSoup
 from assistance_program import assistance_program
 from CONSTS import TABLE_LEN
+import pymongo
+
+def get_mongodb_var(url):
+    myclient = pymongo.MongoClient(url)
+    mydb = myclient["ex_database"]
+    mongodb_var = mydb["funds"]
+    return mongodb_var
+    
 
 def get_funds_from_website(base_http):
     page = requests.get(base_http)
@@ -52,8 +60,7 @@ def get_values_from_website(html_address):
     my_dict = {"eligible_treatments": eligible_treatments, "state": is_open, "is_re_enrollment": is_re_enrollment, "grant_amount": grant_amount}
     return my_dict
 
-def update_program(funds,mongodb_var):
-    prog = input("Please enter a program to update: ")
+def update_program(funds,mongodb_var,prog):
     for fund in funds.find_all("li"):
         fund_name = fund.find("a").get_text()
         if fund_name == prog:

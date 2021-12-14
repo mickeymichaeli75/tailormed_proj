@@ -5,18 +5,6 @@ from assistance_program import assistance_program
 from CONSTS import TABLE_LEN
 import pymongo
 
-def get_mongodb_var(url):
-    myclient = pymongo.MongoClient(url)
-    mydb = myclient["ex_database"]
-    mongodb_var = mydb["funds"]
-    return mongodb_var
-    
-
-def get_funds_from_website(base_http):
-    page = requests.get(base_http)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    funds = soup.find(class_="funds")
-    return funds
 
 
 def get_values_from_website(html_address):
@@ -111,13 +99,15 @@ def print_updated_funds(mongodb_var):
         
         
         
-        
-def print_eligible_treatments(updated_funds):
-    prog = input("Please enter a fund name: ")
-    for fund in updated_funds:
-        if fund[0].name == prog:
-            for treat in fund[0].eligible_treatments:
-                print (treat)
-            break
-    else:
-        print ("The fund isn't available. Please update the fund first!\n")
+def get_mongodb_var(url):
+    myclient = pymongo.MongoClient(url)
+    mydb = myclient["ex_database"]
+    mongodb_var = mydb["funds"]
+    return mongodb_var
+    
+
+def get_funds_from_website(base_http):
+    page = requests.get(base_http)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    funds = soup.find(class_="funds")
+    return funds

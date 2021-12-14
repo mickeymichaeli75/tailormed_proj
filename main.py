@@ -1,4 +1,4 @@
-from scraper import get_funds_from_website,update_program,print_updated_funds,print_eligible_treatments,get_mongodb_var
+from scraper import get_funds_from_website,update_program,print_updated_funds,get_mongodb_var
 import requests
 from bs4 import BeautifulSoup
 from CONSTS import BASE_HTTP,TABLE_LEN, MONGO_DB_URL
